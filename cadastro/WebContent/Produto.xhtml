@@ -1,0 +1,90 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Produto Details</f:facet>
+    
+        <s:decorate id="codigo" template="layout/display.xhtml">
+            <ui:define name="label">Codigo</ui:define>
+            <h:outputText value="#{produtoHome.instance.codigo}"/>
+        </s:decorate>
+        
+        <s:decorate id="nome" template="layout/display.xhtml">
+            <ui:define name="label">Nome</ui:define>
+            <h:outputText value="#{produtoHome.instance.nome}"/>
+        </s:decorate>
+        
+        <s:decorate id="valorUnitario" template="layout/display.xhtml">
+            <ui:define name="label">Valor unitario</ui:define>
+            <h:outputText value="#{produtoHome.instance.valorUnitario}">
+                <f:convertNumber/>
+            </h:outputText>
+        </s:decorate>
+			
+        <s:decorate id="descricao" template="layout/display.xhtml">
+            <ui:define name="label">Descricao</ui:define>
+            <h:outputText value="#{produtoHome.instance.descricao}"/>
+        </s:decorate>
+
+        <s:decorate id="data" template="layout/display.xhtml">
+            <ui:define name="label">Data</ui:define>
+            <h:outputText value="#{produtoHome.instance.data}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+     
+		<s:decorate id="ativo" template="layout/display.xhtml">
+            <ui:define name="label">Ativo</ui:define>
+            <h:outputText value="#{produtoHome.instance.ativo}"/>
+        </s:decorate>
+       
+        <s:decorate id="fabricante" template="layout/display.xhtml">
+            <ui:define name="label">Fabricante</ui:define>
+            <h:outputText value="#{produtoHome.instance.fabricante.descricao}"/>
+        </s:decorate>
+        
+        <s:decorate id="tipo" template="layout/display.xhtml">
+            <ui:define name="label">Tipo</ui:define>
+            <h:outputText value="#{produtoHome.instance.tipo}"/>
+        </s:decorate>
+
+		<h:panelGroup id="pnlTags" layout="block" rendered="#{produtoHome.exibePainelTags()}">
+        <s:decorate id="tags" template="layout/display.xhtml">
+            <ui:define name="label">Tags</ui:define>
+            <h:outputText value="#{produtoHome.instance.tags}"/>
+        </s:decorate>
+        </h:panelGroup>
+        
+        <s:decorate id="categoria" template="layout/display.xhtml">
+        	<ui:define name="label">Categorias</ui:define>
+        	<ui:repeat var="pc" value="#{produtoHome.listaDeCategorias()}">
+        		<h:outputText value="#{pc.categoria.descricao}" /><br/>
+        	</ui:repeat>
+        </s:decorate>
+        
+        <div style="clear:both"/>
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/ProdutoEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty produtoFrom ? 'ProdutoList' : produtoFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+</ui:define>
+
+</ui:composition>

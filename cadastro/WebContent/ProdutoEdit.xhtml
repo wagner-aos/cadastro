@@ -1,0 +1,156 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="produto" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{produtoHome.managed ? 'Edit' : 'Add'} Produto</f:facet>
+            
+            <s:decorate id="codigoField" template="layout/edit.xhtml">
+                <ui:define name="label">Codigo</ui:define>
+                <h:inputText id="codigo"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{produtoHome.instance.codigo}">
+                    <a:support event="onblur" reRender="codigoField" bypassUpdates="true" ajaxSingle="true"/>
+                    <s:validate/>
+                </h:inputText>
+            </s:decorate>
+
+			<s:decorate id="nomeField" template="layout/edit.xhtml">
+                <ui:define name="label">Nome</ui:define>
+                <h:inputText id="nome"
+                       required="true"
+                           size="50"
+                      maxlength="50"
+                          value="#{produtoHome.instance.nome}">
+                    <a:support event="onblur" reRender="nomeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="valorUnitarioField" template="layout/edit.xhtml">
+                <ui:define name="label">Valor unitario</ui:define>
+                <h:inputText id="valorUnitario"
+                       required="true"
+                          value="#{produtoHome.instance.valorUnitario}"
+                           size="26">
+                    <a:support event="onblur" reRender="valorUnitarioField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="descricaoField" template="layout/edit.xhtml">
+                <ui:define name="label">Descricao</ui:define>
+                <h:inputText id="descricao"
+                           size="100"
+                      maxlength="150"
+                          value="#{produtoHome.instance.descricao}">
+                    <a:support event="onblur" reRender="descricaoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+         		
+            <s:decorate id="dataField" template="layout/edit.xhtml">
+                <ui:define name="label">Data</ui:define>
+                <rich:calendar id="data"
+                       required="true"
+                          value="#{produtoHome.instance.data}" datePattern="MM/dd/yyyy" />
+            </s:decorate>
+            
+            <s:decorate id="ativoField" template="layout/edit.xhtml">
+                <ui:define name="label">Ativo</ui:define>
+                <h:selectBooleanCheckbox id="ativo"
+                                      value="#{produtoHome.instance.ativo}"/>
+            </s:decorate>
+            
+            <!-- Fabricante -->
+            <s:decorate id="fabricanteField" template="layout/edit.xhtml">
+           		<ui:define name="label">Fabricante</ui:define>
+	            <rich:comboBox var="_fabricante" value="#{produtoHome.instance.fabricante}" 
+                     defaultLabel="Selecione um fabricante" converter="proj.comboBoxConverter">
+                    
+                     <s:selectItems value="#{fabricanteList.resultList}" var="f" label="#{f.descricao}"/>  
+ 	           </rich:comboBox>
+            </s:decorate>
+       
+            <!-- Tipo -->
+            <s:decorate id="tipoField" template="layout/edit.xhtml">
+           		<ui:define name="label">Tipo</ui:define>
+	            <rich:comboBox value="#{produtoHome.instance.tipo}"
+                     defaultLabel="Selecione um tipo">
+                     <s:selectItems value="#{produtoHome.tipos()}" var="t" itemLabel="#{t}" itemValue="#{t}"/>  
+                     <a:support event="onchange" reRender="pnlTags" ajaxSingle="true" limitToList="true"/>
+ 	            </rich:comboBox>
+ 	        </s:decorate>
+                      
+            <h:panelGroup id="pnlTags" layout="block" rendered="#{produtoHome.exibePainelTags()}">
+            <s:decorate id="tagsField" template="layout/edit.xhtml">
+	           	 <ui:define name="label">Tags</ui:define>
+	             <h:selectManyListbox value="#{produtoHome.tagsSelecionadas}" converter="proj.comboBoxConverter">
+	        		<f:selectItems value="#{produtoHome.listaDeTags}" var="ta" 
+	        					   itemLabel="#{ta.label}" itemValue="#{ta.value}"/>
+	    		 </h:selectManyListbox>
+	        </s:decorate>
+	        </h:panelGroup>
+            
+            <!-- Categorias -->
+            <s:decorate id="categoriaField" template="layout/edit.xhtml">
+           	 <ui:define name="label">Categoria</ui:define>
+             <h:selectManyListbox value="#{produtoHome.categoriasSelecionadas}" converter="proj.comboBoxConverter">
+        		<f:selectItems value="#{produtoHome.listaDeCategoriasDB()}" />
+    		 </h:selectManyListbox>
+        	</s:decorate>
+        
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{produtoHome.persist}"
+                       disabled="#{!produtoHome.wired}"
+                       rendered="#{!produtoHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{produtoHome.update}"
+                       rendered="#{produtoHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{produtoHome.remove}"
+                      immediate="true"
+                       rendered="#{produtoHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/Produto.xhtml"
+                rendered="#{produtoHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty produtoFrom ? 'ProdutoList' : produtoFrom}.xhtml"
+                rendered="#{!produtoHome.managed}"/>
+
+        </div>
+    </h:form>
+
+
+</ui:define>
+</ui:composition>

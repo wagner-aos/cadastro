@@ -1,0 +1,124 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+		<rich:comboBox var="_fabricante" value="#{produtoHome.instance.fabricante}"
+                           defaultLabel="Selecione um fabricante" suggestionValues="#{fabricanteList.resultList}">
+                           
+        </rich:comboBox>
+
+    <rich:panel>
+  
+    <rich:dataTable id="fabricanteList"
+                var="_fabricante"
+              value="#{fabricanteList.resultList}"
+           rendered="#{not empty fabricanteList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{fabricanteList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="fabricante.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_fabricante.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{fabricanteList}"/>
+                    <ui:param name="propertyLabel" value="Codigo"/>
+                    <ui:param name="propertyPath" value="fabricante.codigo"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_fabricante.codigo}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{fabricanteList}"/>
+                    <ui:param name="propertyLabel" value="Descricao"/>
+                    <ui:param name="propertyPath" value="fabricante.descricao"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_fabricante.descricao}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Action</f:facet>
+            <s:link view="/#{empty from ? 'Fabricante' : from}.xhtml"
+                   value="#{empty from ? 'View' : 'Select'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="fabricanteViewId">
+                <f:param name="fabricanteId"
+                        value="#{_fabricante.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/FabricanteEdit.xhtml"
+                   value="Edit"
+             propagation="none"
+                      id="fabricanteEdit"
+                rendered="#{empty from}">
+                <f:param name="fabricanteId"
+                        value="#{_fabricante.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/FabricanteList.xhtml"
+            rendered="#{fabricanteList.previousExists}"
+               value="#{messages.left}#{messages.left} First Page"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/FabricanteList.xhtml"
+            rendered="#{fabricanteList.previousExists}"
+               value="#{messages.left} Previous Page"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{fabricanteList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/FabricanteList.xhtml"
+            rendered="#{fabricanteList.nextExists}"
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{fabricanteList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/FabricanteList.xhtml"
+            rendered="#{fabricanteList.nextExists}"
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{fabricanteList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/FabricanteEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Create fabricante">
+            <f:param name="fabricanteId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

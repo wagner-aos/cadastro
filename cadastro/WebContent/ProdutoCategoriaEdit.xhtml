@@ -1,0 +1,189 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="produtoCategoria" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{produtoCategoriaHome.managed ? 'Edit' : 'Add'} Produto categoria</f:facet>
+
+
+            <s:decorate id="produtoIdField" template="layout/edit.xhtml">
+                <ui:define name="label">Produto id</ui:define>
+                <h:inputText id="produtoId"
+                       required="true"
+                       disabled="#{produtoCategoriaHome.managed}"
+                          value="#{produtoCategoriaHome.instance.id.produtoId}">
+                    <a:support event="onblur" reRender="produtoIdField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <s:decorate id="categoriaIdField" template="layout/edit.xhtml">
+                <ui:define name="label">Categoria id</ui:define>
+                <h:inputText id="categoriaId"
+                       required="true"
+                       disabled="#{produtoCategoriaHome.managed}"
+                          value="#{produtoCategoriaHome.instance.id.categoriaId}">
+                    <a:support event="onblur" reRender="categoriaIdField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{produtoCategoriaHome.persist}"
+                       disabled="#{!produtoCategoriaHome.wired}"
+                       rendered="#{!produtoCategoriaHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{produtoCategoriaHome.update}"
+                       rendered="#{produtoCategoriaHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{produtoCategoriaHome.remove}"
+                      immediate="true"
+                       rendered="#{produtoCategoriaHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/ProdutoCategoria.xhtml"
+                rendered="#{produtoCategoriaHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty produtoCategoriaFrom ? 'ProdutoCategoriaList' : produtoCategoriaFrom}.xhtml"
+                rendered="#{!produtoCategoriaHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Categoria *" labelClass="required">
+    <div class="association" id="categoriaParent">
+
+        <h:outputText value="There is no categoria associated with this produtoCategoria."
+                   rendered="#{produtoCategoriaHome.instance.categoria == null}"/>
+
+        <rich:dataTable var="_categoria"
+                   value="#{produtoCategoriaHome.instance.categoria}"
+                rendered="#{produtoCategoriaHome.instance.categoria != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="categoriaTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_categoria.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Codigo</f:facet>
+                <h:outputText value="#{_categoria.codigo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descricao</f:facet>
+                <h:outputText value="#{_categoria.descricao}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{produtoCategoriaHome.instance.categoria != null ? 'changeParent' : 'selectParent'}" value="#{produtoCategoriaHome.instance.categoria != null ? 'Change' : 'Select'} categoria"
+                       view="/CategoriaList.xhtml">
+                <f:param name="from" value="ProdutoCategoriaEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Produto *" labelClass="required">
+    <div class="association" id="produtoParent">
+
+        <h:outputText value="There is no produto associated with this produtoCategoria."
+                   rendered="#{produtoCategoriaHome.instance.produto == null}"/>
+
+        <rich:dataTable var="_produto"
+                   value="#{produtoCategoriaHome.instance.produto}"
+                rendered="#{produtoCategoriaHome.instance.produto != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="produtoTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_produto.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fabricante id</f:facet>
+                <h:outputText value="#{_produto.fabricante.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ativo</f:facet>
+                <h:outputText value="#{_produto.ativo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Codigo</f:facet>
+                <h:outputText value="#{_produto.codigo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Data</f:facet>
+                <h:outputText value="#{_produto.data}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descricao</f:facet>
+                <h:outputText value="#{_produto.descricao}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_produto.nome}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tags</f:facet>
+                <h:outputText value="#{_produto.tags}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tipo</f:facet>
+                <h:outputText value="#{_produto.tipo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Valor unitario</f:facet>
+                <h:outputText value="#{_produto.valorUnitario}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{produtoCategoriaHome.instance.produto != null ? 'changeParent' : 'selectParent'}" value="#{produtoCategoriaHome.instance.produto != null ? 'Change' : 'Select'} produto"
+                       view="/ProdutoList.xhtml">
+                <f:param name="from" value="ProdutoCategoriaEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

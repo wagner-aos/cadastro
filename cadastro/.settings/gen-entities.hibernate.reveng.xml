@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+<table-filter match-name="Categoria" match-schema=".*" match-catalog="ventron"></table-filter>
+<table-filter match-name="Fabricante" match-schema=".*" match-catalog="ventron"></table-filter>
+<table-filter match-name="Produto" match-schema=".*" match-catalog="ventron"></table-filter>
+<table-filter match-name="produto_categoria" match-schema=".*" match-catalog="ventron"></table-filter>
+</hibernate-reverse-engineering>

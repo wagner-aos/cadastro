@@ -1,0 +1,159 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="fabricante" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{fabricanteHome.managed ? 'Edit' : 'Add'} Fabricante</f:facet>
+
+
+
+            <s:decorate id="codigoField" template="layout/edit.xhtml">
+                <ui:define name="label">Codigo</ui:define>
+                <h:inputText id="codigo"
+                       required="true"
+                           size="30"
+                      maxlength="30"
+                          value="#{fabricanteHome.instance.codigo}">
+                    <a:support event="onblur" reRender="codigoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="descricaoField" template="layout/edit.xhtml">
+                <ui:define name="label">Descricao</ui:define>
+                <h:inputText id="descricao"
+                       required="true"
+                           size="100"
+                      maxlength="150"
+                          value="#{fabricanteHome.instance.descricao}">
+                    <a:support event="onblur" reRender="descricaoField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{fabricanteHome.persist}"
+                       disabled="#{!fabricanteHome.wired}"
+                       rendered="#{!fabricanteHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{fabricanteHome.update}"
+                       rendered="#{fabricanteHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{fabricanteHome.remove}"
+                      immediate="true"
+                       rendered="#{fabricanteHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/Fabricante.xhtml"
+                rendered="#{fabricanteHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty fabricanteFrom ? 'FabricanteList' : fabricanteFrom}.xhtml"
+                rendered="#{!fabricanteHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Produtos">
+        <h:form styleClass="association" id="produtosChildren">
+
+            <h:outputText value="There are no produtos associated with this fabricante."
+                       rendered="#{empty fabricanteHome.produtos}"/>
+
+            <rich:dataTable value="#{fabricanteHome.produtos}"
+                           var="_produto"
+                      rendered="#{not empty fabricanteHome.produtos}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="produtosTable">
+                <rich:column sortBy="#{_produto.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_produto.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_produto.ativo}">
+                    <f:facet name="header">Ativo</f:facet>
+                    <h:outputText value="#{_produto.ativo}"/>
+                </rich:column>
+                <rich:column sortBy="#{_produto.codigo}">
+                    <f:facet name="header">Codigo</f:facet>
+                    <h:outputText value="#{_produto.codigo}"/>
+                </rich:column>
+                <rich:column sortBy="#{_produto.data}">
+                    <f:facet name="header">Data</f:facet>
+                    <h:outputText value="#{_produto.data}">
+                        <s:convertDateTime type="date" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_produto.descricao}">
+                    <f:facet name="header">Descricao</f:facet>
+                    <h:outputText value="#{_produto.descricao}"/>
+                </rich:column>
+                <rich:column sortBy="#{_produto.nome}">
+                    <f:facet name="header">Nome</f:facet>
+                    <h:outputText value="#{_produto.nome}"/>
+                </rich:column>
+                <rich:column sortBy="#{_produto.tags}">
+                    <f:facet name="header">Tags</f:facet>
+                    <h:outputText value="#{_produto.tags}"/>
+                </rich:column>
+                <rich:column sortBy="#{_produto.tipo}">
+                    <f:facet name="header">Tipo</f:facet>
+                    <h:outputText value="#{_produto.tipo}"/>
+                </rich:column>
+                <rich:column sortBy="#{_produto.valorUnitario}">
+                    <f:facet name="header">Valor unitario</f:facet>
+                    <h:outputText value="#{_produto.valorUnitario}">
+                        <f:convertNumber/>
+                    </h:outputText>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{fabricanteHome.managed}" id="produtos">
+        <div class="actionButtons">
+            <s:button id="addproduto"
+                   value="Add produto"
+                    view="/ProdutoEdit.xhtml"
+             propagation="none">
+                 <f:param name="fabricanteId"
+                         value="#{fabricanteHome.instance.id}"/>
+                 <f:param name="produtoFrom" value="Fabricante"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

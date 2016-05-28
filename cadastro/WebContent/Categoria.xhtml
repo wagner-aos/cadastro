@@ -1,0 +1,96 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Categoria Details</f:facet>
+
+
+        <s:decorate id="codigo" template="layout/display.xhtml">
+            <ui:define name="label">Codigo</ui:define>
+            <h:outputText value="#{categoriaHome.instance.codigo}"/>
+        </s:decorate>
+
+        <s:decorate id="descricao" template="layout/display.xhtml">
+            <ui:define name="label">Descricao</ui:define>
+            <h:outputText value="#{categoriaHome.instance.descricao}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/CategoriaEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty categoriaFrom ? 'CategoriaList' : categoriaFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Produto categorias</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="produtoCategoriasChildren">
+
+        <h:outputText value="There are no produtoCategorias associated with this categoria."
+                   rendered="#{empty categoriaHome.produtoCategorias}"/>
+
+        <rich:dataTable value="#{categoriaHome.produtoCategorias}"
+                       var="_produtoCategoria"
+                  rendered="#{not empty categoriaHome.produtoCategorias}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="produtoCategoriasTable">
+            <rich:column sortBy="#{_produtoCategoria.id.produtoId}">
+                <f:facet name="header">Produto id</f:facet>
+                <h:outputText value="#{_produtoCategoria.id.produtoId}"/>
+            </rich:column>
+            <rich:column sortBy="#{_produtoCategoria.id.categoriaId}">
+                <f:facet name="header">Categoria id</f:facet>
+                <h:outputText value="#{_produtoCategoria.id.categoriaId}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectprodutoCategoria"
+                     value="Select"
+                      view="/ProdutoCategoria.xhtml">
+                    <f:param name="produtoCategoriaProdutoId"
+                            value="#{_produtoCategoria.id.produtoId}"/>
+                    <f:param name="produtoCategoriaCategoriaId"
+                            value="#{_produtoCategoria.id.categoriaId}"/>
+                    <f:param name="produtoCategoriaFrom" value="Categoria"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add produtoCategoria"
+                view="/ProdutoCategoriaEdit.xhtml">
+            <f:param name="categoriaId"
+                    value="#{categoriaHome.instance.id}"/>
+            <f:param name="produtoCategoriaFrom" value="Categoria"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

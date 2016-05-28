@@ -1,0 +1,157 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Produto categoria Details</f:facet>
+
+        <s:decorate id="produtoId" template="layout/display.xhtml">
+            <ui:define name="label">Produto id</ui:define>
+            <h:outputText value="#{produtoCategoriaHome.instance.id.produtoId}"/>
+        </s:decorate>
+        <s:decorate id="categoriaId" template="layout/display.xhtml">
+            <ui:define name="label">Categoria id</ui:define>
+            <h:outputText value="#{produtoCategoriaHome.instance.id.categoriaId}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/ProdutoCategoriaEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty produtoCategoriaFrom ? 'ProdutoCategoriaList' : produtoCategoriaFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Categoria</h:panelGroup>
+        </f:facet>
+    <div class="association" id="categoriaParent">
+
+        <h:outputText value="There is no categoria associated with this produtoCategoria."
+                   rendered="#{produtoCategoriaHome.instance.categoria == null}"/>
+
+        <rich:dataTable var="_categoria"
+                   value="#{produtoCategoriaHome.instance.categoria}"
+                rendered="#{produtoCategoriaHome.instance.categoria != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="categoriaTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_categoria.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Codigo</f:facet>
+                <h:outputText value="#{_categoria.codigo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descricao</f:facet>
+                <h:outputText value="#{_categoria.descricao}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewcategoria"
+                     value="View"
+                      view="/Categoria.xhtml">
+                    <f:param name="categoriaId"
+                           value="#{_categoria.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Produto</h:panelGroup>
+        </f:facet>
+    <div class="association" id="produtoParent">
+
+        <h:outputText value="There is no produto associated with this produtoCategoria."
+                   rendered="#{produtoCategoriaHome.instance.produto == null}"/>
+
+        <rich:dataTable var="_produto"
+                   value="#{produtoCategoriaHome.instance.produto}"
+                rendered="#{produtoCategoriaHome.instance.produto != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="produtoTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_produto.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fabricante id</f:facet>
+                <h:outputText value="#{_produto.fabricante.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Ativo</f:facet>
+                <h:outputText value="#{_produto.ativo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Codigo</f:facet>
+                <h:outputText value="#{_produto.codigo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Data</f:facet>
+                <h:outputText value="#{_produto.data}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Descricao</f:facet>
+                <h:outputText value="#{_produto.descricao}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Nome</f:facet>
+                <h:outputText value="#{_produto.nome}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tags</f:facet>
+                <h:outputText value="#{_produto.tags}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Tipo</f:facet>
+                <h:outputText value="#{_produto.tipo}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Valor unitario</f:facet>
+                <h:outputText value="#{_produto.valorUnitario}">
+                    <f:convertNumber/>
+                </h:outputText>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewproduto"
+                     value="View"
+                      view="/Produto.xhtml">
+                    <f:param name="produtoId"
+                           value="#{_produto.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>
